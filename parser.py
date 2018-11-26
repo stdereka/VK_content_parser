@@ -58,8 +58,8 @@ def run():
     # user = getpass(prompt="E-mail/Phone number:", stream=None)
     # password = getpass(prompt="Password:", stream=None)
 
-    user = '89257977195'
-    password = '098qwe'
+    user = ''
+    password = ''
 
     session = vk.AuthSession(app_id=app_id, user_login=user, user_password=password, scope='messages')
     del user

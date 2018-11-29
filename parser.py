@@ -45,7 +45,7 @@ def write_letter(s):
 
 
 def run():
-    app_id = 6753116
+    app_id = 6763143
     # 10 days
     interval = 864000.0
     index_size = 500
@@ -95,7 +95,7 @@ def run():
             owner_id = post['owner_id']
             post_link = 'https://vk.com/' + str(domain) + '?w=wall' + str(post['owner_id']) + '_' + str(post['id'])
             for keyword in keywords:
-                if keyword in post['text']:
+                if keyword in post['text'].lower():
                     post_idx = str(owner_id) + str(post_id)
                     is_post_new = False
                     if post_idx not in indexed_items:
@@ -116,7 +116,7 @@ def run():
             flag = True
             for comment in comments:
                 for keyword in keywords:
-                    if keyword in comment['text']:
+                    if keyword in comment['text'].lower():
                         comment_idx = str(owner_id) + str(post_id) + str(comment['id'])
                         is_comment_new = False
                         if comment_idx not in indexed_items:
@@ -151,4 +151,7 @@ def run():
 
 
 if __name__ == "__main__":
-    run()
+    while True:
+        run()
+        t.sleep(1800)
+

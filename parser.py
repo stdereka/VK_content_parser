@@ -4,6 +4,12 @@ from argparse import ArgumentParser
 from datetime import datetime
 import time as t
 import os
+import requests
+
+app_id = 6763143
+# 10 days
+interval = 864000.0
+index_size = 500
 
 
 def get_timestamp(dt):
@@ -44,12 +50,13 @@ def write_letter(s):
         f.close()
 
 
-def run():
-    app_id = 6763143
-    # 10 days
-    interval = 864000.0
-    index_size = 500
+def death_report(user, password, receiver):
+    session = vk.AuthSession(app_id=app_id, user_login=user, user_password=password, scope='messages')
+    api = vk.API(session)
+    api.messages.send(domain=receiver, message='I\'m dead. Revive me!', v='5.52')
 
+
+def run(user, password):
     parser = ArgumentParser()
     # parser.add_argument("--date")
     parser.add_argument("--verbose", '-v', action='store_true')
@@ -57,9 +64,6 @@ def run():
 
     # user = getpass(prompt="E-mail/Phone number:", stream=None)
     # password = getpass(prompt="Password:", stream=None)
-
-    user = ''
-    password = ''
 
     session = vk.AuthSession(app_id=app_id, user_login=user, user_password=password, scope='messages')
     del user
@@ -151,7 +155,21 @@ def run():
 
 
 if __name__ == "__main__":
+    death_user = ''
+    death_password = ''
+    death_receiver = ''
     while True:
-        run()
-        t.sleep(1800)
-
+        try:
+            run(death_user, death_password)
+        except requests.HTTPError:
+            os.system('echo "### HTTPError ###" >> log.txt')
+            t.sleep(60)
+            continue
+        except requests.ConnectionError:
+            os.system('echo "### ConnectionError ###" >> log.txt')
+            t.sleep(60)
+            continue
+        except Exception:
+            death_report(death_user, death_password, death_receiver)
+            raise
+        t.sleep(1200)

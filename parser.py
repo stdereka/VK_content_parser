@@ -5,11 +5,18 @@ from datetime import datetime
 import time as t
 import os
 import requests
+import configparser
 
-app_id = 6763143
-# 10 days
-interval = 864000.0
-index_size = 500
+
+config = configparser.ConfigParser()
+config.read('config.ini')
+config = config['runner']
+app_id = int(config['app_id'])
+interval = float(config['interval'])
+index_size = int(config['index_size'])
+robot_user = str(config['robot_user'])
+robot_password = str(config['robot_password'])
+death_report_receiver = str(config['death_report_receiver'])
 
 
 def get_timestamp(dt):
@@ -155,12 +162,9 @@ def run(user, password):
 
 
 if __name__ == "__main__":
-    death_user = ''
-    death_password = ''
-    death_receiver = ''
     while True:
         try:
-            run(death_user, death_password)
+            run(robot_user, robot_password)
         except requests.HTTPError:
             os.system('echo "### HTTPError ###" >> log.txt')
             t.sleep(60)
@@ -170,6 +174,6 @@ if __name__ == "__main__":
             t.sleep(60)
             continue
         except Exception:
-            death_report(death_user, death_password, death_receiver)
+            death_report(robot_user, robot_password, death_report_receiver)
             raise
         t.sleep(1200)

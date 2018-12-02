@@ -173,7 +173,11 @@ if __name__ == "__main__":
             os.system('echo "### ConnectionError ###" >> log.txt')
             t.sleep(60)
             continue
-        except Exception:
+        except requests.ReadTimeout:
+            os.system('echo "### ReadTimeout ###" >> log.txt')
+            t.sleep(60)
+            continue
+        except Exception as e:
             death_report(robot_user, robot_password, death_report_receiver)
-            raise
+            raise e
         t.sleep(1200)
